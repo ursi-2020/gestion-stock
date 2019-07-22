@@ -1,6 +1,0 @@
-Django
-psycopg2
-setuptools
-wheel
-requests
-git+git://github.com/ursi-2020/technical-base-package.git@master#egg=apipkg
