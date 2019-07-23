@@ -15,3 +15,11 @@ class Vente(models.Model):
 
     def __str__(self):
         return 'Vente: {} - {}'.format(self.article.nom, self.date)
+
+
+class Data(models.Model):
+    text = models.CharField(max_length=100)
+    date = models.DateTimeField()
+
+    def __str__(self):
+        return 'data: {} - {}'.format(self.text, self.date)

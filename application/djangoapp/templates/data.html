@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Gestion des stocks app</h1>
+{% for d in data %}
+<div class="card-body">
+      <h5 class="card-title">{{d.text}}</h5>
+      <p class="card-text">{{d.date}}</p>
+    </div>
+{% endfor %}
+</body>
+</html>
