@@ -1,12 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+
+</head>
 <body>
 <h1>Gestion des stocks app</h1>
-{% for d in data %}
-<div class="card-body">
-      <h5 class="card-title">{{d.text}}</h5>
-      <p class="card-text">{{d.date}}</p>
-    </div>
+<form action="/">
+    <input type="submit" value="Retour à l'accueil" />
+</form>
+<h2>Articles</h2>
+<form action="/add-article">
+    <input type="submit" value="Ajouter un article" />
+</form>
+{% for article in articles %}
+<p>Nom : {{ article.nom }} , Stock : {{article.stock}}
+</p>
 {% endfor %}
 </body>
 </html>
