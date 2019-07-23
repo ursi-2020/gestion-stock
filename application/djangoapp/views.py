@@ -29,6 +29,9 @@ def add_article(request):
             first = Article.objects.all().filter(nom=form['nom'].value()).first()
             if (first is None) :
                 new_article = form.save()
+            else :
+                first.stock += int(form['stock'].value())
+                first.save()
             return HttpResponseRedirect('/')
     else:
         form = ArticleForm()
