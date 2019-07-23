@@ -26,7 +26,9 @@ def add_article(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if form.is_valid():
-            new_article = form.save()
+            first = Article.objects.all().filter(nom=form['nom'].value()).first()
+            if (first is None) :
+                new_article = form.save()
             return HttpResponseRedirect('/')
     else:
         form = ArticleForm()
