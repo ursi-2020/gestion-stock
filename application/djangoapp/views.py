@@ -56,10 +56,10 @@ def remove_article(request):
             if (first is not None) :
                 form_stock = int(form['stock'].value())
                 if (form_stock > first.stock):
-                    first.delete()
+                    first.stock = 0
                 else :
                     first.stock -= int(form['stock'].value())
-                    first.save()
+                first.save()
             return HttpResponseRedirect('/list')
     else:
         form = ArticleForm()
