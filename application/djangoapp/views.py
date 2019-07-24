@@ -20,7 +20,7 @@ def button(request):
     return render(request, "button.html", context)
 
 def info(request):
-    return HttpResponse("Je suis gestion des stocks")
+    return HttpResponse("Gestion des stocks")
 
 def add_article(request):
     if request.method == 'POST':
@@ -32,7 +32,7 @@ def add_article(request):
             else :
                 first.stock += int(form['stock'].value())
                 first.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/list')
     else:
         form = ArticleForm()
     return render(request, 'add_article.html', {'form' : form})
@@ -43,3 +43,24 @@ def list(request):
         'articles': datas,
     }
     return render(request, "data.html", context)
+
+def clear(request):
+    Article.objects.all().delete()
+    return HttpResponseRedirect('/list')
+
+def remove_article(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            first = Article.objects.all().filter(nom=form['nom'].value()).first()
+            if (first is not None) :
+                form_stock = int(form['stock'].value())
+                if (form_stock > first.stock):
+                    first.delete()
+                else :
+                    first.stock -= int(form['stock'].value())
+                    first.save()
+            return HttpResponseRedirect('/list')
+    else:
+        form = ArticleForm()
+    return render(request, 'remove_article.html', {'form' : form})

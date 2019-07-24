@@ -11,9 +11,17 @@
     <input type="submit" value="Retour à l'accueil" />
 </form>
 <h2>Articles</h2>
-<form action="/add-article">
+<div>
+<form action="/add-article" style="display:inline-block">
     <input type="submit" value="Ajouter un article" />
 </form>
+<form action="/remove-article" style="display:inline-block">
+    <input type="submit" value="Retirer un article" />
+</form>
+<form action="/clear" style="display:inline-block">
+    <input type="submit" value="Vider la liste" />
+</form>
+</div>
 {% for article in articles %}
 <p>Nom : {{ article.nom }} , Stock : {{article.stock}}
 </p>
