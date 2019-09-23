@@ -7,6 +7,7 @@ from .models import *
 from .forms import *
 
 import datetime
+
 def index(request):
     info = api.send_request('business-intelligence', 'info')
     return render(request, "index.html", {'info' : info})
@@ -38,11 +39,21 @@ def add_article(request):
     return render(request, 'add_article.html', {'form' : form})
 
 def list(request):
-    datas = Article.objects.all()
+    datas = api.send_request('catalogueproduit', 'api/data') #Article.objects.all()
+    #FIXME check error request
+    if datas.status_code > 299 :
+        print(datas.status_code)
+        #FIXME add nyancat
     context = {
         'articles': datas,
     }
     return render(request, "data.html", context)
+
+
+def log(request):
+    date = datetime.now().strftime('%Y-%m-%d-%H-%M')
+    #FIXME ajouter le log dans la BDD
+    return list(request)
 
 def clear(request):
     Article.objects.all().delete()

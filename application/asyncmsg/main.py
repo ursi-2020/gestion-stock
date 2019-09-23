@@ -7,9 +7,13 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
 from application.djangoapp.models import *
+from apipkg import api_manager as api
 
+import datetime
 
 def main():
+    #FIXME add task to scheduler
+    #request = api.send_request('scheduler', 'schedule/add')
     print("Liste des ventes:")
     for v in Vente.objects.all():
         print("ID: " + str(v.id) + "\tArticle: " + v.article.nom + "\tDate: " + str(v.date))
