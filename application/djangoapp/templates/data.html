@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>{{title}}</title>
-
-</head>
-<body>
-<h1>Gestion des stocks</h1>
+{% extends "base.html" %}
+{% block title %} Accueil {% endblock %}
+{% block content %}
 <form action="/">
     <input type="submit" value="Retour à l'accueil" />
 </form>
-<h2>Articles</h2>
-<div>
-<form action="/add-article" style="display:inline-block">
-    <input type="submit" value="Ajouter un article" />
-</form>
-<form action="/remove-article" style="display:inline-block">
-    <input type="submit" value="Retirer un article" />
-</form>
-<form action="/clear" style="display:inline-block">
-    <input type="submit" value="Vider la liste" />
-</form>
+<h2>Liste de produits</h2>
 </div>
-{% for article in articles %}
-<p>Nom : {{ article.nom }} , Stock : {{article.stock}}
+{% for p in produits %}
+<p>Code: {{ p.codeProduit }} , Famille: {{p.familleProduit}}, Description: {{p.descriptionProduit}}
+    , QuantitéMin: {{p.quantiteMin}}, Packaging: {{p.packaging}}, Prix: {{p.prix}}
 </p>
 {% endfor %}
-</body>
-</html>
+{% endblock %}

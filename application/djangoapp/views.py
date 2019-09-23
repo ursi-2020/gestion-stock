@@ -4,21 +4,14 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
 from .models import *
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from .forms import *
-
-import datetime
+from datetime import datetime
+import json
 
 def index(request):
-    info = api.send_request('business-intelligence', 'info')
-    return render(request, "index.html", {'info' : info})
-
-def request(request):
-    text = api.send_request('business-intelligence', 'info')
-    return HttpResponse(text)
-
-def button(request):
-    context = {}
-    return render(request, "button.html", context)
+    scheduler()
+    return render(request, "index.html")
 
 def info(request):
     return HttpResponse("Gestion des stocks")
@@ -39,15 +32,43 @@ def add_article(request):
     return render(request, 'add_article.html', {'form' : form})
 
 def list(request):
-    datas = api.send_request('catalogueproduit', 'api/data') #Article.objects.all()
-    #FIXME check error request
-    if datas.status_code > 299 :
-        print(datas.status_code)
-        #FIXME add nyancat
+    get_product()
     context = {
-        'articles': datas,
+        'produits': Produit.objects.all(),
     }
     return render(request, "data.html", context)
+
+def get_product():
+    request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
+    catalogue = json.loads(request)
+    list = catalogue['produits']
+    for item in list:
+        codeProduit = item['codeProduit']
+        instance = Produit.objects.get(codeProduit=codeProduit)
+        if (instance.exist()):
+            instance.prix = item['prix']
+            instance.packaging = item['packaging']
+            instance.familleProduit = item["familleProduit"]
+            instance.descriptionProduit = item["descriptionProduit"]
+            instance.quantiteMin = item["quantiteMin"]
+            instance.save()
+        else:
+            Produit.objects.create(
+                codeProduit=codeProduit,
+                familleProduit=item["familleProduit"],
+                descriptionProduit=item["descriptionProduit"],
+                quantiteMin=item["quantiteMin"],
+                packaging=item["packaging"],
+                prix=item["prix"]
+            )
+
+
+def scheduler():
+    body = open("./static/schedule.json", mode='r', encoding='utf-8')
+    data = json.load(body)
+    print(data)
+    #schedule = api.post_request('scheduler', '/schedule/add', data)
+    body.close()
 
 
 def log(request):
@@ -75,3 +96,4 @@ def remove_article(request):
     else:
         form = ArticleForm()
     return render(request, 'remove_article.html', {'form' : form})
+
