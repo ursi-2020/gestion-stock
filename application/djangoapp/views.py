@@ -8,7 +8,7 @@ import json
 import requests
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, "index.html", {'form': ScheduleForm})
 
 def info(request):
     return HttpResponse("Gestion des stocks")
@@ -24,7 +24,6 @@ def schedule(request):
                           form['data'].value(),
                           form['source'].value(),
                           form['name'].value())
-            return HttpResponseRedirect('/')
         else:
             form = ScheduleForm()
         return render(request, 'index.html', {'form': form})

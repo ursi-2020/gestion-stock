@@ -19,11 +19,11 @@ class ArticleForm(ModelForm):
         fields = ['nom', 'stock']
 
 class ScheduleForm(forms.Form):
-    host = forms.CharField(label='Host', max_length=150)
-    url = forms.CharField(label='Url', max_length=150)
+    host = forms.CharField(label='Host', max_length=150, widget=forms.TextInput())
+    url = forms.CharField(label='Url', max_length=150, widget=forms.TextInput())
     time = forms.DateTimeField(label='Time', input_formats=valid_date_time,
               widget=forms.DateTimeInput(attrs={'placeholder': 'jj/mm/aaaa [hh:mm[:ss]]'}))
     recurrence = forms.CharField(label='Recurrence', widget=forms.Select(choices=recurrence_choice))
-    data = forms.CharField(label='Data', max_length=150, required=False)
-    source = forms.CharField(label='Source', max_length=150)
-    name = forms.CharField(label='Name', max_length=150)
+    data = forms.CharField(label='Data', max_length=150, required=False, widget=forms.TextInput())
+    source = forms.CharField(label='Source', max_length=150, widget=forms.TextInput())
+    name = forms.CharField(label='Name', max_length=150, widget=forms.TextInput())
