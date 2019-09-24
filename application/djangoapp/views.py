@@ -12,22 +12,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 def index(request):
-    return render(request, "index.html", {'form': ScheduleForm})
+    return render(request, "index.html")
 
 def info(request):
     return HttpResponse("Gestion des stocks")
 
-def schedule(request):
+def add_schedule(request):
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
             schedule_task(form['host'].value(),
                           form['url'].value(),
-                          form['time'].value(),
                           form['recurrence'].value(),
                           form['data'].value(),
-                          form['source'].value(),
-                          form['name'].value())
+                          form['name'].value(),
+                          form['time'].value())
+            return HttpResponseRedirect('/schedule')
         else:
             form = ScheduleForm()
         return render(request, 'index.html', {'form': form})
@@ -83,10 +83,9 @@ def get_product():
             logger.info("Product " + instance.codeProduit + " a été créé")
 
 
-def schedule_task(host, url, time, recurrence, data, source, name):
-    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
+def schedule_task(host, url, recurrence,data, name, time):
     headers = {'Host': 'scheduler'}
-    data = {"target_url": url, "target_app": host, "time": time_str, "recurrence": recurrence, "data": data, "source_app": source, "name": name}
+    data = {"target_url": url, "target_app": host, "time": time, "recurrence": recurrence, "data": data, "source_app": "gestion-stock", "name": name}
     r = requests.post(api.api_services_url + 'schedule/add', headers = headers, json = data)
     print(r.status_code)
     print(r.text)
@@ -117,4 +116,9 @@ def remove_article(request):
     else:
         form = ArticleForm()
     return render(request, 'remove_article.html', {'form' : form})
+
+def schedule(request):
+    list = api.send_request('scheduler', 'schedule/list')
+    time = api.send_request('scheduler', 'clock/time')
+    return render(request, "schedule.html", {'list' : list, 'time':time, 'form': ScheduleForm})
 

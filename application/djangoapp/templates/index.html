@@ -3,32 +3,7 @@
 {% block content %}
 <h1>Gestion des stocks</h1>
 Bienvenue sur l'application "Gestion des stocks"
-<form action="/list">
-    <input type="submit" value="Liste de produits" />
-</form>
-<button type="button" class="btn btn-link" data-toggle="modal"
-    data-target="#ScheduleModal">Schedule</button>
-
-<div class="modal fade" id="ScheduleModal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Schedule a task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <form action="/schedule/" method="post" enctype="multipart/form-data">
-      <div class="modal-body">
-        {% csrf_token %}
-        {{ form.as_p }}
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-        <input type="submit" class="btn btn-secondary" value="Enregistrer" />
-      </div>
-    </div>
-          </form>
-  </div>
-</div>
-</div>
+    </br></br></br>
+<a href="/list" class="btn btn-primary" role="button">Liste de produits</a>
+    <a href="/schedule" class="btn btn-primary" role="button">Liste du Schedule</a>
 {% endblock %}
