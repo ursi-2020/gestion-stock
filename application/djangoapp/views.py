@@ -6,6 +6,10 @@ from .forms import *
 from datetime import datetime
 import json
 import requests
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 def index(request):
     return render(request, "index.html", {'form': ScheduleForm})
@@ -52,6 +56,8 @@ def list(request):
 
 def get_product():
     request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
+    logger.info(
+        "GET host : catalogue-produit at route /catalogueproduit/api/data")
     catalogue = json.loads(request)
     list = catalogue['produits']
     for item in list:
@@ -64,6 +70,7 @@ def get_product():
             instance.descriptionProduit = item["descriptionProduit"]
             instance.quantiteMin = item["quantiteMin"]
             instance.save()
+            logger.info("Product " + instance.codeProduit + " a été mis à jour" )
         else:
             Produit.objects.create(
                 codeProduit=codeProduit,
@@ -73,6 +80,7 @@ def get_product():
                 packaging=item["packaging"],
                 prix=item["prix"]
             )
+            logger.info("Product " + instance.codeProduit + " a été créé")
 
 
 def schedule_task(host, url, time, recurrence, data, source, name):
