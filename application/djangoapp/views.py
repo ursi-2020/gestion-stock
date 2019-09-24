@@ -1,20 +1,33 @@
 from django.http import *
 from apipkg import api_manager as api
 from django.shortcuts import render
-from django.http import JsonResponse
-from django.core import serializers
 from .models import *
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from .forms import *
 from datetime import datetime
 import json
+import requests
 
 def index(request):
-    scheduler()
     return render(request, "index.html")
 
 def info(request):
     return HttpResponse("Gestion des stocks")
+
+def schedule(request):
+    if request.method == 'POST':
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            schedule_task(form['host'].value(),
+                          form['url'].value(),
+                          form['time'].value(),
+                          form['recurrence'].value(),
+                          form['data'].value(),
+                          form['source'].value(),
+                          form['name'].value())
+            return HttpResponseRedirect('/')
+        else:
+            form = ScheduleForm()
+        return render(request, 'index.html', {'form': form})
 
 def add_article(request):
     if request.method == 'POST':
@@ -63,13 +76,14 @@ def get_product():
             )
 
 
-def scheduler():
-    body = open("./static/schedule.json", mode='r', encoding='utf-8')
-    data = json.load(body)
-    print(data)
-    #schedule = api.post_request('scheduler', '/schedule/add', data)
-    body.close()
-
+def schedule_task(host, url, time, recurrence, data, source, name):
+    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
+    headers = {'Host': 'scheduler'}
+    data = {"target_url": url, "target_app": host, "time": time_str, "recurrence": recurrence, "data": data, "source_app": source, "name": name}
+    r = requests.post(api.api_services_url + 'schedule/add', headers = headers, json = data)
+    print(r.status_code)
+    print(r.text)
+    return r.text
 
 def log(request):
     date = datetime.now().strftime('%Y-%m-%d-%H-%M')

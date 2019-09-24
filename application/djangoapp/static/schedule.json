@@ -1,7 +1,32 @@
-{
-   "target_url":"catalogueproduit/api/data",
-   "target_app":"catalogue-produit",
-   "time":"23/09/2019-23:32:00",
-   "recurrence":"minute",
-   "data":""
-}
+<input name="host" class="form-control" placeholder="Host"/>
+        <input name="url" class="form-control" placeholder="Url"/>
+        <div class='col-sm-6'>
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' name="time" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
+        <select name="cars">
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="fiat">Fiat</option>
+          <option value="audi">Audi</option>
+        </select>
+        <input name="recurrence" class="form-control" placeholder="Entrer un email"/>
+        <input name="data" class="form-control" placeholder="Entrer un email"/>
+        <input name="source" class="form-control" placeholder="Entrer un email"/>
+        <input name="name" class="form-control" placeholder="Entrer un email"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        <input type="submit" class="btn btn-secondary" value="Enregistrer" />
+      </div>
