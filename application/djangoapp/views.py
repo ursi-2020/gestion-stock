@@ -1,5 +1,6 @@
 from django.http import *
 from apipkg import api_manager as api
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .models import *
 from .forms import *
@@ -57,7 +58,7 @@ def list_delete(request):
     Produit.objects.all().delete()
     return HttpResponseRedirect('/list')
 
-
+@csrf_exempt
 def get_product(request):
     request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
     logger.info(
