@@ -60,36 +60,39 @@ def list_delete(request):
 
 @csrf_exempt
 def get_product(request):
-    request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
+    product = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
     logger.info(
         "GET host : catalogue-produit at route /catalogueproduit/api/data")
-    catalogue = json.loads(request)
-    list = catalogue['produits']
-    for item in list:
-        codeProduit = item['codeProduit']
-        try:
-            instance = Produit.objects.get(codeProduit=codeProduit)
-        except Produit.DoesNotExist:
-            instance = None
-        if instance is not None:
-            instance.prix = int(item['prix'])/100
-            instance.packaging = item['packaging']
-            instance.familleProduit = item["familleProduit"]
-            instance.descriptionProduit = item["descriptionProduit"]
-            instance.quantiteMin = item["quantiteMin"]
-            instance.save()
-            logger.info("Product " + instance.codeProduit + " a été mis à jour" )
-        else:
-            Produit.objects.create(
-                codeProduit=codeProduit,
-                familleProduit=item["familleProduit"],
-                descriptionProduit=item["descriptionProduit"],
-                quantiteMin=item["quantiteMin"],
-                packaging=item["packaging"],
-                prix=int(item["prix"])/100
-            )
-            logger.info("Product " + codeProduit + " a été créé")
-    return HttpResponseRedirect('/')
+    if product == "An invalid response was received from the upstream server\n":
+        return render(request, '404_Not_Found.html')
+    else :
+        catalogue = json.loads(product)
+        list = catalogue['produits']
+        for item in list:
+            codeProduit = item['codeProduit']
+            try:
+                instance = Produit.objects.get(codeProduit=codeProduit)
+            except Produit.DoesNotExist:
+                instance = None
+            if instance is not None:
+                instance.prix = int(item['prix'])/100
+                instance.packaging = item['packaging']
+                instance.familleProduit = item["familleProduit"]
+                instance.descriptionProduit = item["descriptionProduit"]
+                instance.quantiteMin = item["quantiteMin"]
+                instance.save()
+                logger.info("Product " + instance.codeProduit + " a été mis à jour" )
+            else:
+                Produit.objects.create(
+                    codeProduit=codeProduit,
+                    familleProduit=item["familleProduit"],
+                    descriptionProduit=item["descriptionProduit"],
+                    quantiteMin=item["quantiteMin"],
+                    packaging=item["packaging"],
+                    prix=int(item["prix"])/100
+                )
+                logger.info("Product " + codeProduit + " a été créé")
+        return HttpResponseRedirect('/')
 
 
 def schedule_task(host, url, recurrence,data, name, time):
