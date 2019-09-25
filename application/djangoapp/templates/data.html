@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% block title %} Accueil {% endblock %}
 {% block content %}
-<form action="/">
-    <input type="submit" value="Retour à l'accueil" />
-</form>
+    <a href="/" class="btn btn-primary" role="button">Retour à l'accueil</a>
+     <a href="/list/delete" class="btn btn-primary" role="button">Effacer la liste</a>
 <h2>Liste de produits</h2>
 </div>
 {% for p in produits %}

@@ -48,13 +48,17 @@ def add_article(request):
     return render(request, 'add_article.html', {'form' : form})
 
 def list(request):
-    get_product()
     context = {
         'produits': Produit.objects.all(),
     }
     return render(request, "data.html", context)
 
-def get_product():
+def list_delete(request):
+    Produit.objects.all().delete()
+    return HttpResponseRedirect('/list')
+
+
+def get_product(request):
     request = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
     logger.info(
         "GET host : catalogue-produit at route /catalogueproduit/api/data")
@@ -62,9 +66,12 @@ def get_product():
     list = catalogue['produits']
     for item in list:
         codeProduit = item['codeProduit']
-        instance = Produit.objects.get(codeProduit=codeProduit)
-        if (instance.exist()):
-            instance.prix = item['prix']
+        try:
+            instance = Produit.objects.get(codeProduit=codeProduit)
+        except Produit.DoesNotExist:
+            instance = None
+        if instance is not None:
+            instance.prix = int(item['prix'])/100
             instance.packaging = item['packaging']
             instance.familleProduit = item["familleProduit"]
             instance.descriptionProduit = item["descriptionProduit"]
@@ -78,9 +85,10 @@ def get_product():
                 descriptionProduit=item["descriptionProduit"],
                 quantiteMin=item["quantiteMin"],
                 packaging=item["packaging"],
-                prix=item["prix"]
+                prix=int(item["prix"])/100
             )
-            logger.info("Product " + instance.codeProduit + " a été créé")
+            logger.info("Product " + codeProduit + " a été créé")
+    return HttpResponseRedirect('/')
 
 
 def schedule_task(host, url, recurrence,data, name, time):
