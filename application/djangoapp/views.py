@@ -60,9 +60,9 @@ def list_delete(request):
 
 @csrf_exempt
 def get_product(request):
-    product = api.send_request('catalogue-produit', 'catalogueproduit/api/data')
+    product = api.send_request('catalogue-produit', 'api/data')
     logger.info(
-        "GET host : catalogue-produit at route /catalogueproduit/api/data")
+        "GET host : catalogue-produit at route /api/data")
     if product == "An invalid response was received from the upstream server\n":
         return render(request, '404_Not_Found.html')
     else :
@@ -92,7 +92,7 @@ def get_product(request):
                     prix=int(item["prix"])/100
                 )
                 logger.info("Product " + codeProduit + " a été créé")
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/list')
 
 
 def schedule_task(host, url, recurrence,data, name, time):
