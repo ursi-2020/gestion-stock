@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .models import *
 from .forms import *
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import requests
 import logging
@@ -17,6 +17,14 @@ def index(request):
 
 def info(request):
     return HttpResponse("Gestion des stocks")
+
+def demo_schedule(request):
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    time = time + timedelta(seconds=10)
+    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
+    schedule_task('gestion-stock', '/list/update','minute','','demo', time_str)
+    return HttpResponseRedirect('/schedule')
 
 def add_schedule(request):
     if request.method == 'POST':
