@@ -8,12 +8,11 @@
 
 # Rôle de l'application
 
-Le rôle de la gestion commerciale est de passer commande auprès des fournisseurs afin de réaprovisionner les stocks. Elle assure aussi la connexion avec le magasin et le e-commerce pour proposer du réassort et la disponibilité des stocks.
+Le rôle de la gestion des stocks est de gérer les produits stockés en entrepôt. Elle permet au magasin de se réapprovisionner en faisant une livraison (avec bon de livraison), et se réapprovisionne depuis la gestion commerciale qui lui envoie des commandes (avec bon de commande). Enfin, elle permet, via une IHM, de consulter l'état des stocks.
 
 # Membres du groupe
 
-* Nicolas Cendrier
-* Erwan Chabaud (PO)
-* Julien Gantzer
-* Alexandre Rodrigues
-* Jean-Baptiste Verdret
+* Gabriel DEPOTTE (PO)
+* Bertrand HA
+* Claire HAYARD
+* Antonio REN

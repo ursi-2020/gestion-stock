@@ -5,9 +5,9 @@
 ## Place an order
 Place an order in gestion-commerciale for the stocks
 
-**Service name**: `place-order`
+**Service name**: `service`
 
-**URL** : `place-order`
+**URL** : `url`
 
 **Method** : `POST`
 
