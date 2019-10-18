@@ -16,6 +16,14 @@ logger = logging.getLogger(__name__)
 def index(request):
     return render(request, "index.html")
 
+### API
+def api_get_all(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed
+    stock = Article.objects.all()
+    jsonData = list(stock.values())
+    return JsonResponse({"stock" : jsonData})
+
 #...
 def info(request):
     return HttpResponse("Gestion des stocks")
@@ -39,14 +47,31 @@ def stock_modif(request):
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
     livraison = 1 if order["livraison"] else -1
-
-### API
-def api_get_all(request):
-    if request.method != 'GET':
-        return HttpResponseNotAllowed
-    stock = Article.objects.all()
-    jsonData = list(stock.values())
-    return JsonResponse({"stock" : jsonData})
+    list = order["Produits"]
+    # TODO : Create item to log into Entry model
+    for produit in list:
+        codeProduit = produit["codeProduit"]
+        try:
+            instance = Article.objects.get(codeProduit=codeProduit)
+        except Article.DoesNotExist:
+            instance = None
+        if instance is not None:
+            res = instance.quantity + produit["quantite"] * livraison
+            # TODO : true quantity delivered to log?
+            instance.quantity = 0 if res <= 0 else res
+            instance.save()
+            logger.info("Article " + instance.codeProduit + " was sucessfully updated : new stock value : " + instance.quantity)
+        else:
+            if livraison > 0:
+                Article.objects.create(
+                    codeProduit=codeProduit,
+                    quantity=produit["quantite"]
+                )
+                logger.info("Article " + instance.codeProduit + " was sucessfully created : new stock value : " + instance.quantity)
+            # A priori, should never be called except if gesco decides to retrieve an item not in stock
+            else:
+                logger.error("Trying to get an article not in stock")
+    return HttpResponseRedirect('/stock')
 
 def list(request):
     context = {
