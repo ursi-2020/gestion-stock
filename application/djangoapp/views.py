@@ -35,6 +35,18 @@ def stock(request):
     }
     return render(request, "stock.html", context)
 
+def stock_modif(request):
+    # TODO : check what we're getting from request.body
+    order = json.loads(request.body)
+    livraison = 1 if order["livraison"] else -1
+
+def api_get_all(request):
+    if request.method != 'GET':
+        return HttpResponseNotAllowed
+    stock = Article.objects.all()
+    jsonData = list(stock.values())
+    return JsonResponse({"stock" : jsonData})
+
 def list(request):
     context = {
         'produits': Produit.objects.all(),
