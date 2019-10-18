@@ -40,6 +40,7 @@ def stock_modif(request):
     order = json.loads(request.body)
     livraison = 1 if order["livraison"] else -1
 
+### API
 def api_get_all(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed
