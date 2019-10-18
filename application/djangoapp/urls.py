@@ -11,4 +11,5 @@ urlpatterns = [
     path('schedule/add', views.add_schedule, name='add_schedule'),
     path('schedule/', views.schedule, name='schedule'),
     path('schedule/demo', views.demo_schedule, name='demo-schedule'),
+    path('stock/', views.stock, name='stock')
 ]

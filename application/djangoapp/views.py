@@ -29,6 +29,12 @@ def demo_schedule(request):
     schedule_task('gestion-stock', '/list/update','minute','','demo', time_str)
     return HttpResponseRedirect('/schedule')
 
+def stock(request):
+    context = {
+        'stock': Article.objects.all(),
+    }
+    return render(request, "stock.html", context)
+
 def list(request):
     context = {
         'produits': Produit.objects.all(),
