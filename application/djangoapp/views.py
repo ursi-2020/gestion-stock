@@ -43,26 +43,33 @@ def stock(request):
     }
     return render(request, "stock.html", context)
 
+@csrf_exempt
 def stock_modif(request):
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
     livraison = 1 if order["livraison"] else -1
     list = order["Produits"]
-    # TODO : Create item to log into Entry model
+    # Dictionnary to create Entry object before rendering
+    entry = {}
+    entry["idCommande"] = order["idCommande"]
+    products = []
     for produit in list:
+        product = {}
         codeProduit = produit["codeProduit"]
         try:
             instance = Article.objects.get(codeProduit=codeProduit)
         except Article.DoesNotExist:
             instance = None
         if instance is not None:
-            res = instance.quantity + produit["quantite"] * livraison
-            # TODO : true quantity delivered to log?
-            instance.quantity = 0 if res <= 0 else res
+            # GesCo ordered more than what's in stock
+            if not order["livraison"] and instance.quantity < produit["quantite"]:
+                logger.error("Trying to get more of what's in stock")
+                return HttpResponse(500)
+            instance.quantity += produit["quantite"] * livraison
             instance.save()
             logger.info("Article " + instance.codeProduit + " was sucessfully updated : new stock value : " + instance.quantity)
         else:
-            if livraison > 0:
+            if order["livraison"]:
                 Article.objects.create(
                     codeProduit=codeProduit,
                     quantity=produit["quantite"]
@@ -71,7 +78,21 @@ def stock_modif(request):
             # A priori, should never be called except if gesco decides to retrieve an item not in stock
             else:
                 logger.error("Trying to get an article not in stock")
-    return HttpResponseRedirect('/stock')
+                return HttpResponse(500)
+        product["codeProduit"] = codeProduit
+        product["quantite"] = produit["quantite"] * livraison
+        products.append(product)
+    # Creating Entry item for Logs
+    entry["Produits"] = products
+    package = json.dumps(entry, indent=2)
+    date = datetime.now()
+    Entry.objects.create(
+        package= package,
+        date=date
+    )
+    logger.info("Entry created : package was : " + package + ", at : " + date.strftime("%Y-%b-%d, %H:%M:%S"))
+    return JsonResponse({"Response" : entry})
+
 
 def list(request):
     context = {
