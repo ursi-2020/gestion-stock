@@ -102,7 +102,7 @@ def stock_modif(request):
 
 def list(request):
     context = {
-        'produits': Produit.objects.all(),
+        'articles': Article.objects.all(),
     }
     return render(request, "data.html", context)
 
