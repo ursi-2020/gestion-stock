@@ -25,8 +25,9 @@ class Produit(models.Model):
     quantiteMin = models.PositiveIntegerField()
     packaging = models.PositiveIntegerField()
     prix = models.DecimalField(max_digits=5, decimal_places=2)
+    exclusivite = models.CharField(max_length=10)
 
     def __str__(self):
-        return "{\"codeProduit\":{}, \"familleProduit\":{}, \"descriptionProduit\":{},\"quantiteMin\":{}, \"packaging\":{}, \"prix\":{}}".format(
-            self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix)
+        return "{\"codeProduit\":{}, \"familleProduit\":{}, \"descriptionProduit\":{},\"quantiteMin\":{}, \"packaging\":{}, \"prix\":{}, \"exclusivite\":{}}".format(
+            self.codeProduit, self.familleProduit, self.descriptionProduit, self.quantiteMin, self.packaging, self.prix, self.exclusivite)
 

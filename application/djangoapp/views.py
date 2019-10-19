@@ -112,9 +112,9 @@ def list_delete(request):
 
 @csrf_exempt
 def get_product(request):
-    product = api.send_request('catalogue-produit', 'api/data')
+    product = api.send_request('catalogue-produit', 'api/get-all')
     logger.info(
-        "GET host : catalogue-produit at route /api/data")
+        "GET host : catalogue-produit at route /api/get-all")
     if product == "An invalid response was received from the upstream server\n":
         return render(request, '404_Not_Found.html')
     else :
@@ -132,6 +132,7 @@ def get_product(request):
                 instance.familleProduit = item["familleProduit"]
                 instance.descriptionProduit = item["descriptionProduit"]
                 instance.quantiteMin = item["quantiteMin"]
+                instance.exclusivite = item["exclusivite"]
                 instance.save()
                 logger.info("Product " + instance.codeProduit + " a été mis à jour" )
             else:
@@ -141,7 +142,8 @@ def get_product(request):
                     descriptionProduit=item["descriptionProduit"],
                     quantiteMin=item["quantiteMin"],
                     packaging=item["packaging"],
-                    prix=int(item["prix"])/100
+                    prix=int(item["prix"])/100,
+                    exclusivite=item["exclusivite"]
                 )
                 logger.info("Product " + codeProduit + " a été créé")
         return HttpResponseRedirect('/list')
