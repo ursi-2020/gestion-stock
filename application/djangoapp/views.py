@@ -43,6 +43,12 @@ def stock(request):
     }
     return render(request, "stock.html", context)
 
+def entry(request):
+    context = {
+        'entries': Entry.objects.all(),
+    }
+    return render(request, "entries.html", context)
+
 @csrf_exempt
 def stock_modif(request):
     # TODO : check what we're getting from request.body
