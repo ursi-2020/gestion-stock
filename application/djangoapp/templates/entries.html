@@ -4,17 +4,20 @@
 
     <a href="/" class="btn btn-primary" role="button">Retour à l'accueil</a>
 <h2>Entrée de la marchandise</h2>
-</div>
-    <table border="1" cellpadding="5">
-    <tr>
-        <td>Entry</td>
-        <td>Date</td>
-    </tr>
-    {% for entry in entries %}
+    <table class="table table-sm">
+    <thead class="thead-dark">
         <tr>
-            <td>{{entry.package}}</td>
-            <td>{{entry.date}}</td>
+            <th scope="col">Entry</th>
+            <th scope="col">Date</th>
         </tr>
-    {% endfor %}
+    </thead>
+    <tbody>
+        {% for entry in entries %}
+            <tr>
+                <td>{{entry.package}}</td>
+                <td>{{entry.date}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
     </table>
 {% endblock %}

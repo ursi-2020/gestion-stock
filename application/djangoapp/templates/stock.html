@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block title %} Accueil {% endblock %}
 {% block content %}
-
-    <a href="/" class="btn btn-primary" role="button">Retour à l'accueil</a>
+<a href="/" class="btn btn-primary" role="button">Retour à l'accueil</a>
 <h2>Stock des produits</h2>
-</div>
-    <table border="1" cellpadding="5">
-    <tr>
-        <td>Code produit</td>
-        <td>Quantité</td>
-    </tr>
-    {% for article in stock %}
-        <tr>
-            <td>{{article.codeProduit}}</td>
-            <td>{{article.quantity}}</td>
-        </tr>
-    {% endfor %}
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Code produit</th>
+                <th>Quantité</th>
+            </tr>
+        </thead>
+    <tbody>
+        {% for article in stock %}
+            <tr>
+                <td>{{article.codeProduit}}</td>
+                <td>{{article.quantity}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
     </table>
 {% endblock %}

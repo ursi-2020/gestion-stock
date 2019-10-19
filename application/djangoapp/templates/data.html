@@ -6,21 +6,31 @@
     <a href="/list/delete" class="btn btn-primary" role="button">Effacer la liste</a>
     <a href="/list/update" class="btn btn-primary" role="button">Récuperer les produits</a>
 <h2>Liste de produits</h2>
-</div>
-    <table border="1" cellpadding="5">
-    <tr>
-        <td>Code produit</td>
-        <td>Quantité</td>
-    </tr>
-    {% for p in produits %}
-        <tr>
-            <td>{{p.codeProduit}}</td>
-            <td>{{p.familleProduit}}</td>
-            <td>{{p.descriptionProduit}}</td>
-            <td>{{p.quantiteMin}}</td>
-            <td>{{p.packaging}}</td>
-            <td>{{p.prix}}</td>
-        </tr>
-    {% endfor %}
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Code produit</th>
+                <th scope="col">Famille</th>
+                <th scope="col">Description</th>
+                <th scope="col">QuantitéMin</th>
+                <th scope="col">Packaging</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Exclusivité</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in produits %}
+                <tr>
+                    <td>{{p.codeProduit}}</td>
+                    <td>{{p.familleProduit}}</td>
+                    <td>{{p.descriptionProduit}}</td>
+                    <td>{{p.quantiteMin}}</td>
+                    <td>{{p.packaging}}</td>
+                    <td>{{p.prix}}</td>
+                    <td>{{p.exclusivite}}</td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 {% endblock %}
