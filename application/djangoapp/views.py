@@ -1,5 +1,6 @@
 from django.http import *
 from apipkg import api_manager as api
+from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .models import *
@@ -21,7 +22,7 @@ def api_get_all(request):
     if request.method != 'GET':
         return HttpResponseNotAllowed
     stock = Article.objects.all()
-    jsonData = list(stock.values())
+    jsonData = serializers.serialize("json", stock)
     return JsonResponse({"stock" : jsonData})
 
 #...
