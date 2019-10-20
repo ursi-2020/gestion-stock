@@ -20,10 +20,10 @@ def index(request):
 ### API
 def api_get_all(request):
     if request.method != 'GET':
-        return HttpResponseNotAllowed
-    stock = Article.objects.all()
-    jsonData = serializers.serialize("json", stock)
-    return JsonResponse({"stock" : jsonData})
+        return HttpResponseNotAllowed()
+    stock = Article.objects.values()
+    json = list(stock)
+    return JsonResponse({"stock" : json})
 
 #...
 def info(request):
@@ -84,7 +84,7 @@ def stock_modif(request):
                 logger.info("Article " + instance.codeProduit + " was sucessfully created : new stock value : " + instance.quantity)
             # A priori, should never be called except if gesco decides to retrieve an item not in stock
             else:
-                logger.error("Trying to get an article not in stock")
+                logger.error("Trying to get an Article not in stock")
                 return HttpResponse(500)
         product["codeProduit"] = codeProduit
         product["quantite"] = produit["quantite"] * livraison
@@ -101,7 +101,7 @@ def stock_modif(request):
     return JsonResponse({"Response" : entry})
 
 
-def list(request):
+def data(request):
     context = {
         'produits': Produit.objects.all(),
     }

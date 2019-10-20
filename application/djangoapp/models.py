@@ -6,7 +6,7 @@ class Article(models.Model):
     quantity = models.PositiveIntegerField()
 
     def __str__(self):
-        return 'Article: {}'.format(self.nom)
+        return 'Article: {} - {}'.format(self.codeProduit, self.quantity)
 
 
 class Entry(models.Model):
