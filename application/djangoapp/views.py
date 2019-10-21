@@ -53,7 +53,6 @@ def entry(request):
 @csrf_exempt
 def stock_modif(request):
     # TODO : check what we're getting from request.body
-    print(request.body)
     order = json.loads(request.body)
     livraison = 1 if order["livraison"] else -1
     list = order["Produits"]
@@ -98,8 +97,6 @@ def stock_modif(request):
     entry["Produits"] = command
     package = json.dumps(entry, indent=2)
     date = datetime.now()
-    print(package)
-    print(entry)
     Entry.objects.create(
         package= package,
         date=date

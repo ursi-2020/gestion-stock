@@ -11,7 +11,7 @@ class Article(models.Model):
 
 class Entry(models.Model):
     # package is a JSON formatted string that will store the id and the quantity moved
-    package = models.TextField
+    package = models.TextField()
     date = models.DateTimeField()
 
     def __str__(self):
