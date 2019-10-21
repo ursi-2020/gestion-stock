@@ -3,10 +3,10 @@ from django.db import models
 
 class Article(models.Model):
     codeProduit = models.CharField(max_length=200)
-    quantity = models.PositiveIntegerField()
+    quantite = models.PositiveIntegerField()
 
     def __str__(self):
-        return 'Article: {} - {}'.format(self.codeProduit, self.quantity)
+        return 'Article: {} - {}'.format(self.codeProduit, self.quantite)
 
 
 class Entry(models.Model):

@@ -53,6 +53,7 @@ def entry(request):
 @csrf_exempt
 def stock_modif(request):
     # TODO : check what we're getting from request.body
+    print(request.body)
     order = json.loads(request.body)
     livraison = 1 if order["livraison"] else -1
     list = order["Produits"]
@@ -70,20 +71,20 @@ def stock_modif(request):
             instance = None
         if instance is not None:
             # GesCo ordered more than what's in stock
-            if not order["livraison"] and instance.quantity < produit["quantite"]:
+            if not order["livraison"] and instance.quantite < produit["quantite"]:
                 logger.error("Trying to get more of what's in stock")
                 return HttpResponse(500)
-            instance.quantity += produit["quantite"] * livraison
+            instance.quantite += produit["quantite"] * livraison
             instance.save()
-            logger.info("Article " + instance.codeProduit + " was sucessfully updated : new stock value : " + instance.quantity)
+            logger.info("Article " + instance.codeProduit + " was sucessfully updated : new stock value : " + instance.quantite)
         else:
             if order["livraison"]:
-                newProduct.append(Article(codeProduit=codeProduit, quantity=produit["quantite"]))
+                newProduct.append(Article(codeProduit=codeProduit, quantite=produit["quantite"]))
                 #Article.objects.create(
                  #   codeProduit=codeProduit,
-                  #  quantity=produit["quantite"]
+                  #  quantite=produit["quantite"]
                 #)
-                #logger.info("Article " + instance.codeProduit + " was sucessfully created : new stock value : " + instance.quantity)
+                #logger.info("Article " + instance.codeProduit + " was sucessfully created : new stock value : " + instance.quantite)
             # A priori, should never be called except if gesco decides to retrieve an item not in stock
             else:
                 logger.error("Trying to get an Article not in stock")
@@ -97,6 +98,8 @@ def stock_modif(request):
     entry["Produits"] = command
     package = json.dumps(entry, indent=2)
     date = datetime.now()
+    print(package)
+    print(entry)
     Entry.objects.create(
         package= package,
         date=date
@@ -104,6 +107,13 @@ def stock_modif(request):
     logger.info("Entry created : package was : " + package + ", at : " + date.strftime("%Y-%b-%d, %H:%M:%S"))
     return JsonResponse({"Response" : entry})
 
+@csrf_exempt
+def test(request):
+    Article.objects.all().delete()
+    str = '{"Produits": [{"codeProduit": "X1-0", "quantite": 16}, {"codeProduit": "X1-1", "quantite": 20}, {"codeProduit": "X1-2", "quantite": 21}, {"codeProduit": "X1-3", "quantite": 27}, {"codeProduit": "X1-4", "quantite": 13}, {"codeProduit": "X1-8", "quantite": 20}, {"codeProduit": "X1-9", "quantite": 10}, {"codeProduit": "X1-10", "quantite": 28}], "livraison": true, "idCommande": 15012019145734}'
+    res = api.post_request('gestion-stock', 'api/add-to-stock', str)
+    print(res)
+    return HttpResponseRedirect('/entries')
 
 def data(request):
     context = {

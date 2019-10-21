@@ -16,7 +16,7 @@ recurrence_choice= [
 class ArticleForm(ModelForm):
     class Meta:
         model = Article
-        fields = ['codeProduit', 'quantity']
+        fields = ['codeProduit', 'quantite']
 
 class ScheduleForm(forms.Form):
     host = forms.CharField(label='Host', max_length=150, widget=forms.TextInput())

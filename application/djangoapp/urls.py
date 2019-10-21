@@ -13,6 +13,8 @@ urlpatterns = [
     path('schedule/demo', views.demo_schedule, name='demo-schedule'),
     path('stock/', views.stock, name='stock'),
     path('entries/', views.entry, name='entry'),
+    path('test/', views.test, name='test'),
+
 
     ## API ROUTES ##
     path('api/get-all', views.api_get_all, name='api-get-all'),
