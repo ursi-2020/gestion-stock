@@ -59,7 +59,8 @@ def stock_modif(request):
     # Dictionnary to create Entry object before rendering
     entry = {}
     entry["idCommande"] = order["idCommande"]
-    products = []
+    command = []
+    newProduct = []
     for produit in list:
         product = {}
         codeProduit = produit["codeProduit"]
@@ -77,20 +78,23 @@ def stock_modif(request):
             logger.info("Article " + instance.codeProduit + " was sucessfully updated : new stock value : " + instance.quantity)
         else:
             if order["livraison"]:
-                Article.objects.create(
-                    codeProduit=codeProduit,
-                    quantity=produit["quantite"]
-                )
-                logger.info("Article " + instance.codeProduit + " was sucessfully created : new stock value : " + instance.quantity)
+                newProduct.append(Article(codeProduit=codeProduit, quantity=produit["quantite"]))
+                #Article.objects.create(
+                 #   codeProduit=codeProduit,
+                  #  quantity=produit["quantite"]
+                #)
+                #logger.info("Article " + instance.codeProduit + " was sucessfully created : new stock value : " + instance.quantity)
             # A priori, should never be called except if gesco decides to retrieve an item not in stock
             else:
                 logger.error("Trying to get an Article not in stock")
                 return HttpResponse(500)
         product["codeProduit"] = codeProduit
         product["quantite"] = produit["quantite"] * livraison
-        products.append(product)
+        command.append(product)
+    # Bulk Creating articles, trying out solution to fix problem
+    Article.objects.bulk_create(newProduct)
     # Creating Entry item for Logs
-    entry["Produits"] = products
+    entry["Produits"] = command
     package = json.dumps(entry, indent=2)
     date = datetime.now()
     Entry.objects.create(
