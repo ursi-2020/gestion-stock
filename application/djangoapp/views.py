@@ -64,32 +64,33 @@ def stock_modif(request):
     for produit in list:
         product = {}
         codeProduit = produit["codeProduit"]
+        delivered = produit["quantite"]
         try:
             instance = Article.objects.get(codeProduit=codeProduit)
         except Article.DoesNotExist:
             instance = None
+        # Object exist in stock
         if instance is not None:
             # GesCo ordered more than what's in stock
             if not order["livraison"] and instance.quantite < produit["quantite"]:
-                logger.error("Trying to get more of what's in stock")
-                return HttpResponse(500)
-            instance.quantite += produit["quantite"] * livraison
+                delivered = 0
+            instance.quantite += delivered * livraison
             instance.save()
             logger.info("Article " + str(instance.codeProduit) + " was sucessfully updated : new stock value : " + str(instance.quantite))
+        # Object doesn't exist in stock
         else:
-            if order["livraison"]:
-                newProduct.append(Article(codeProduit=codeProduit, quantite=produit["quantite"]))
+            # Requesting object not in base ==> Inserting in base with quantity 0
+            if not order["livraison"]:
+                delivered = 0
                 #newProduct = Article.objects.create(
                  #   codeProduit=codeProduit,
                   #  quantite=produit["quantite"]
                 #)
                 #logger.info("Article " + str(newProduct.codeProduit) + " was sucessfully created : new stock value : " + str(newProduct.quantite))
-            # A priori, should never be called except if gesco decides to retrieve an item not in stock
-            else:
-                logger.error("Trying to get an Article not in stock")
-                return HttpResponse(500)
+            # Handles all other cases (insertion in base)
+            newProduct.append(Article(codeProduit=codeProduit, quantite=delivered))
         product["codeProduit"] = codeProduit
-        product["quantite"] = produit["quantite"] * livraison
+        product["quantite"] = delivered * livraison
         command.append(product)
     # Bulk Creating articles, trying out solution to fix problem
     Article.objects.bulk_create(newProduct)
@@ -98,17 +99,18 @@ def stock_modif(request):
     package = json.dumps(entry, indent=2)
     date = datetime.now()
     Entry.objects.create(
-        package= package,
-        date=date
+        package=package,
+        date=date,
+        delivery=True if livraison > 0 else False
     )
     logger.info("Entry created : package was : " + package + ", at : " + date.strftime("%Y-%b-%d, %H:%M:%S"))
     return JsonResponse({"Response" : entry})
 
 @csrf_exempt
 def test(request):
-    Article.objects.all().delete()
-    Entry.objects.all().delete()
-    str = '{"Produits": [{"codeProduit": "X1-0", "quantite": 16}, {"codeProduit": "X1-1", "quantite": 20}, {"codeProduit": "X1-2", "quantite": 21}, {"codeProduit": "X1-3", "quantite": 27}, {"codeProduit": "X1-4", "quantite": 13}, {"codeProduit": "X1-8", "quantite": 20}, {"codeProduit": "X1-9", "quantite": 10}, {"codeProduit": "X1-10", "quantite": 28}], "livraison": 1, "idCommande": 15012019145734}'
+    #Article.objects.all().delete()
+    #Entry.objects.all().delete()
+    str = '{"Produits": [{"codeProduit": "X1-0", "quantite": 16}, {"codeProduit": "X1-1", "quantite": 20}, {"codeProduit": "X1-2", "quantite": 21}, {"codeProduit": "X1-3", "quantite": 27}, {"codeProduit": "X1-4", "quantite": 13}, {"codeProduit": "X1-8", "quantite": 20}, {"codeProduit": "X1-9", "quantite": 10}, {"codeProduit": "X1-10", "quantite": 28}], "livraison": 0, "idCommande": 15012019145734}'
     res = api.post_request('gestion-stock', 'api/add-to-stock', str)
     print(res)
     return HttpResponseRedirect('/stock')

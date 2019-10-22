@@ -13,6 +13,7 @@ class Entry(models.Model):
     # package is a JSON formatted string that will store the id and the quantity moved
     package = models.TextField()
     date = models.DateTimeField()
+    delivery = models.BooleanField()
 
     def __str__(self):
         return 'Entry: {} - {}'.format(self.package, self.date)

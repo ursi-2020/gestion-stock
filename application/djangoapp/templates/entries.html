@@ -7,13 +7,15 @@
     <table class="table table-sm">
     <thead class="thead-dark">
         <tr>
-            <th scope="col">Entry</th>
-            <th scope="col">Date</th>
+            <th scope="col">Delivery</th>
+            <th scope="col">Package</th>
+            <th scope="col">Date of operation</th>
         </tr>
     </thead>
     <tbody>
         {% for entry in entries %}
             <tr>
+                <td>{{ entry.delivery }}</td>
                 <td>{{entry.package}}</td>
                 <td>{{entry.date}}</td>
             </tr>
