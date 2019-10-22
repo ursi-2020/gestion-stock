@@ -75,15 +75,15 @@ def stock_modif(request):
                 return HttpResponse(500)
             instance.quantite += produit["quantite"] * livraison
             instance.save()
-            logger.info("Article " + instance.codeProduit + " was sucessfully updated : new stock value : " + instance.quantite)
+            logger.info("Article " + str(instance.codeProduit) + " was sucessfully updated : new stock value : " + str(instance.quantite))
         else:
             if order["livraison"]:
                 newProduct.append(Article(codeProduit=codeProduit, quantite=produit["quantite"]))
-                #Article.objects.create(
+                #newProduct = Article.objects.create(
                  #   codeProduit=codeProduit,
                   #  quantite=produit["quantite"]
                 #)
-                #logger.info("Article " + instance.codeProduit + " was sucessfully created : new stock value : " + instance.quantite)
+                #logger.info("Article " + str(newProduct.codeProduit) + " was sucessfully created : new stock value : " + str(newProduct.quantite))
             # A priori, should never be called except if gesco decides to retrieve an item not in stock
             else:
                 logger.error("Trying to get an Article not in stock")
@@ -107,10 +107,11 @@ def stock_modif(request):
 @csrf_exempt
 def test(request):
     Article.objects.all().delete()
-    str = '{"Produits": [{"codeProduit": "X1-0", "quantite": 16}, {"codeProduit": "X1-1", "quantite": 20}, {"codeProduit": "X1-2", "quantite": 21}, {"codeProduit": "X1-3", "quantite": 27}, {"codeProduit": "X1-4", "quantite": 13}, {"codeProduit": "X1-8", "quantite": 20}, {"codeProduit": "X1-9", "quantite": 10}, {"codeProduit": "X1-10", "quantite": 28}], "livraison": true, "idCommande": 15012019145734}'
+    Entry.objects.all().delete()
+    str = '{"Produits": [{"codeProduit": "X1-0", "quantite": 16}, {"codeProduit": "X1-1", "quantite": 20}, {"codeProduit": "X1-2", "quantite": 21}, {"codeProduit": "X1-3", "quantite": 27}, {"codeProduit": "X1-4", "quantite": 13}, {"codeProduit": "X1-8", "quantite": 20}, {"codeProduit": "X1-9", "quantite": 10}, {"codeProduit": "X1-10", "quantite": 28}], "livraison": 1, "idCommande": 15012019145734}'
     res = api.post_request('gestion-stock', 'api/add-to-stock', str)
     print(res)
-    return HttpResponseRedirect('/entries')
+    return HttpResponseRedirect('/stock')
 
 def data(request):
     context = {
