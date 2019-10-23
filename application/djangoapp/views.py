@@ -90,7 +90,7 @@ def stock_modif(request):
             # Handles all other cases (insertion in base)
             newProduct.append(Article(codeProduit=codeProduit, quantite=delivered))
         product["codeProduit"] = codeProduit
-        product["quantite"] = delivered * livraison
+        product["quantite"] = delivered
         command.append(product)
     # Bulk Creating articles, trying out solution to fix problem
     Article.objects.bulk_create(newProduct)
