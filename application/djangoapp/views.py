@@ -51,6 +51,17 @@ def entry(request):
     return render(request, "entries.html", context)
 
 @csrf_exempt
+def schedule_add_stock(request):
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    time = time + timedelta(days=1)
+    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
+    data = (request.body).decode("utf-8")
+    schedule_task('gestion-stock', '/api/entry_delivery', 'none', data , 'schedule_delivery', time_str)
+    return JsonResponse({"Response" : 200})
+
+
+@csrf_exempt
 def stock_modif(request):
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
