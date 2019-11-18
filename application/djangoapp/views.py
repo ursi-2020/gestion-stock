@@ -1,6 +1,6 @@
 from django.http import *
 from apipkg import api_manager as api
-from django.core import serializers
+from apipkg import queue_manager as queue
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .models import *
@@ -65,6 +65,9 @@ def schedule_add_stock(request):
 def stock_modif(request):
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
+    stock_modif_from_body(order)
+
+def stock_modif_from_body(order):
     livraison = 1 if order["livraison"] else -1
     list = order["Produits"]
     # Dictionnary to create Entry object before rendering
@@ -203,9 +206,13 @@ def schedule(request):
     time = api.send_request('scheduler', 'clock/time')
     return render(request, "schedule.html", {'list' : list, 'time':time, 'form': ScheduleForm})
 
-
-
 #FIXME ajouter le log dans la BDD
 def log(request):
     date = datetime.now().strftime('%Y-%m-%d-%H-%M')
     return list(request)
+
+
+# ASYNCHRONOUS MESSAGES MANAGEMENT
+def callback(ch, method, properties, body):
+    parsedBody = json.loads(body)
+    stock_modif_from_body(body)
