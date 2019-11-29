@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import json
 import requests
 import logging
+import os
 
 
 logger = logging.getLogger(__name__)
@@ -211,8 +212,21 @@ def log(request):
     date = datetime.now().strftime('%Y-%m-%d-%H-%M')
     return list(request)
 
+def sendAsyncMsg(to, body, functionName):
+    time = api.send_request('scheduler', 'clock/time')
+    message = '{ "from":"' + os.environ[
+        'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
+       body) + ', "functionname":"' + functionName + '"}'
+    queue.send(to, message)
 
 # ASYNCHRONOUS MESSAGES MANAGEMENT
 def callback(ch, method, properties, body):
     parsedBody = json.loads(body)
-    stock_modif_from_body(body)
+    origin = parsedBody["from"]
+    functionName = ""
+    if 'functionname' in parsedBody:
+        functionName = parsedBody["functionname"]
+
+    #Treatment depending on where the caller is from
+    if origin == "gestion-commerciale":
+        #do something there

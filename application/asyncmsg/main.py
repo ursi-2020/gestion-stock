@@ -19,7 +19,8 @@ def main():
     #FIXME add task to scheduler
     #request = api.send_request('scheduler', 'schedule/add')
     print("Start")
-    queue.receive('AppB', callback)
+    #queue.receive('AppB', callback)
 
 if __name__ == '__main__':
+    queue.receive('gestion-stock', callback)
     main()
