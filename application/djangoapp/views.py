@@ -10,6 +10,7 @@ import json
 import requests
 import logging
 import os
+from apipkg import api_manager
 
 
 logger = logging.getLogger(__name__)
@@ -66,7 +67,7 @@ def schedule_add_stock(request):
 def stock_modif(request):
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
-    stock_modif_from_body(order)
+    return JsonResponse({"Response": stock_modif_from_body(order)})
 
 def stock_modif_from_body(order):
     livraison = 1 if order["livraison"] else -1
@@ -119,7 +120,7 @@ def stock_modif_from_body(order):
         delivery=True if livraison > 0 else False
     )
     logger.info("Entry created : package was : " + package + ", at : " + date.strftime("%Y-%b-%d, %H:%M:%S"))
-    return JsonResponse({"Response" : entry})
+    return entry
 
 @csrf_exempt
 def test(request):
@@ -219,14 +220,16 @@ def sendAsyncMsg(to, body, functionName):
        body) + ', "functionname":"' + functionName + '"}'
     queue.send(to, message)
 
-# ASYNCHRONOUS MESSAGES MANAGEMENT
-def callback(ch, method, properties, body):
-    parsedBody = json.loads(body)
-    origin = parsedBody["from"]
-    functionName = ""
-    if 'functionname' in parsedBody:
-        functionName = parsedBody["functionname"]
+def sendAsyncMsg(to, body, functionName):
+    time = api_manager.send_request('scheduler', 'clock/time')
+    message = '{ "from":"' + os.environ[
+        'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
+        body) + ', "functionname":"' + functionName + '"}'
+    print(to)
+    print(message)
+    queue.send(to, message)
 
-    #Treatment depending on where the caller is from
-    if origin == "gestion-commerciale":
-        #do something there
+def test_async(request):
+    print("=========== Test async call")
+    sendAsyncMsg("gestion-stock", "{}", "get_order_stocks")
+    return render(request, "index.html", {})

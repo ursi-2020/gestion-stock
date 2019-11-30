@@ -14,6 +14,7 @@ urlpatterns = [
     path('stock/', views.stock, name='stock'),
     path('entries/', views.entry, name='entry'),
     path('test/', views.test, name='test'),
+    path('test_async/', views.test_async, name='test_async'),
 
 
     ## API ROUTES ##
