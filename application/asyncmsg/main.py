@@ -43,8 +43,8 @@ def dispatch(ch, method, properties, body):
     elif fromApp == 'gestion-stock':
         if functionName == "get_order_stocks":
             print("=========== Get order stocks!")
-            #response = stock_modif_from_body(body)
-            #sendAsyncMsg("gestion-stock", response, "get_stock_order_response")
+            response = stock_modif_from_body(body)
+            sendAsyncMsg("gestion-stock", response, "get_stock_order_response")
         elif functionName == "get_stock_order_response":
             print("=========== Get order stocks response: " + body)
         else:
