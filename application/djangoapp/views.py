@@ -27,8 +27,16 @@ def api_get_all():
     return {"stock": json}
 
 def request_stock(request):
-    sendAsyncMsg('gestion-commerciale', api_get_all(), "get_stock")
-    return render(request, "stock.html", {})
+    print("\n========== Request_stock")
+    allStock = api_get_all()
+    print("allStock:")
+    print(allStock)
+    print("==========\n")
+    sendAsyncMsg('gestion-commerciale', allStock, "get_stock")
+    context = {
+        'stock': Article.objects.all(),
+    }
+    return render(request, "stock.html", context)
 
 #...
 def info(request):
@@ -36,6 +44,7 @@ def info(request):
 
 #
 def demo_schedule(request):
+    print("========== Demo schedule")
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     time = time + timedelta(seconds=10)
@@ -57,6 +66,7 @@ def entry(request):
 
 @csrf_exempt
 def schedule_add_stock(request):
+    print("========== Schedule add stock")
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     time = time + timedelta(days=1)
@@ -65,14 +75,34 @@ def schedule_add_stock(request):
     schedule_task('gestion-stock', '/api/entry_delivery', 'none', data , 'schedule_delivery', time_str)
     return JsonResponse({"Response" : 200})
 
+@csrf_exempt
+def schedule_stock_modif(payLoad):
+    print("\n========== Schedule stock modif")
+    print("payLoad:")
+    print(payLoad)
+    print("==========\n")
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    time = time + timedelta(days=1)
+    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
+    data = payLoad
+    schedule_task('gestion-stock', '/api/stock_modif', 'none', data , 'stock_modif', time_str)
+    return JsonResponse({"Response" : 200})
 
 @csrf_exempt
 def stock_modif(request):
+    print("\n========== Stock modif")
+    print("body:")
+    print(request.body)
+    print("==========\n")
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
-    return JsonResponse({"Response": stock_modif_from_body(order)})
+    response = stock_modif_from_body(order)
+    sendAsyncMsg("gestion-commerciale", response, "get_stock_order_response")
+    return JsonResponse({"Response": response})
 
 def stock_modif_from_body(order):
+    print("========== Stock modif from body")
     livraison = 1 if order["livraison"] else -1
     list = order["produits"]
     # Dictionnary to create Entry object before rendering
@@ -127,6 +157,7 @@ def stock_modif_from_body(order):
 
 @csrf_exempt
 def test(request):
+    print("========== Test")
     #Article.objects.all().delete()
     #Entry.objects.all().delete()
     str = '{"Produits": [{"codeProduit": "X1-0", "quantite": 16}, {"codeProduit": "X1-1", "quantite": 20}, {"codeProduit": "X1-2", "quantite": 21}, {"codeProduit": "X1-3", "quantite": 27}, {"codeProduit": "X1-4", "quantite": 13}, {"codeProduit": "X1-8", "quantite": 20}, {"codeProduit": "X1-9", "quantite": 10}, {"codeProduit": "X1-10", "quantite": 28}], "livraison": 0, "idCommande": 15012019145734}'
@@ -184,6 +215,7 @@ def get_product(request):
 
 
 def add_schedule(request):
+    print("========== Add schedule")
     if request.method == 'POST':
         form = ScheduleForm(request.POST)
         if form.is_valid():
@@ -198,15 +230,18 @@ def add_schedule(request):
             form = ScheduleForm()
         return render(request, 'index.html', {'form': form})
 
-def schedule_task(host, url, recurrence,data, name, time):
+def schedule_task(host, url, recurrence, data, name, time):
+    print("========== Schedule task")
     headers = {'Host': 'scheduler'}
-    data = {"target_url": url, "target_app": host, "time": time, "recurrence": recurrence, "data": data, "source_app": "gestion-stock", "name": name}
-    r = requests.post(api.api_services_url + 'schedule/add', headers = headers, json = data)
+    body = {"target_url": url, "target_app": host, "time": time, "recurrence": recurrence, "data": data, "source_app": "gestion-stock", "name": name}
+    r = requests.post(api.api_services_url + 'schedule/add', headers = headers, json = body)
+    print(r.json())
     print(r.status_code)
     print(r.text)
     return r.text
 
 def schedule(request):
+    print("========== Schedule")
     list = api.send_request('scheduler', 'schedule/list')
     time = api.send_request('scheduler', 'clock/time')
     return render(request, "schedule.html", {'list' : list, 'time':time, 'form': ScheduleForm})
@@ -217,6 +252,14 @@ def log(request):
     return list(request)
 
 def sendAsyncMsg(to, body, functionName):
+    print("\n========== Send async msg")
+    print("to: ")
+    print(to)
+    print("body: ")
+    print(body)
+    print("functionName: ")
+    print(functionName)
+    print("============\n")
     time = api.send_request('scheduler', 'clock/time')
     message = '{ "from":"' + os.environ[
         'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
