@@ -15,7 +15,7 @@ urlpatterns = [
     path('entries/', views.entry, name='entry'),
     path('test/', views.test, name='test'),
     path('test_async/', views.test_async, name='test_async'),
-
+    path('request_stock', views.request_stock, name='request_stock'),
 
     ## API ROUTES ##
     path('api/get-all', views.api_get_all, name='api-get-all'),

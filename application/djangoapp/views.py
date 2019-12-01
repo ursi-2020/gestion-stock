@@ -21,12 +21,14 @@ def index(request):
     return render(request, "index.html")
 
 ### API
-def api_get_all(request):
-    if request.method != 'GET':
-        return HttpResponseNotAllowed()
+def api_get_all():
     stock = Article.objects.values()
     json = list(stock)
-    return JsonResponse({"stock" : json})
+    return {"stock": json}
+
+def request_stock(request):
+    sendAsyncMsg('gestion-commerciale', api_get_all(), "get_stock")
+    return render(request, "stock.html", {})
 
 #...
 def info(request):
