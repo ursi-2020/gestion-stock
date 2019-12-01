@@ -33,7 +33,7 @@ def dispatch(ch, method, properties, body):
 
     if fromApp == 'gestion-commerciale':
         if functionName == "get_order_stocks":
-            response = stock_modif_from_body(body)
+            response = stock_modif_from_body(jsonLoad["body"])
             sendAsyncMsg("gestion-commerciale", response, "get_stock_order_response")
         else:
             print("Le nom de la fonction dans le json n'est pas valide")
@@ -41,7 +41,7 @@ def dispatch(ch, method, properties, body):
     elif fromApp == 'gestion-stock':
         if functionName == "get_order_stocks":
             print("=========== Get order stocks!")
-            response = stock_modif_from_body(body)
+            response = stock_modif_from_body(jsonLoad["body"])
             sendAsyncMsg("gestion-stock", response, "get_stock_order_response")
         elif functionName == "get_stock_order_response":
             print("=========== Get order stocks response: " + body)
