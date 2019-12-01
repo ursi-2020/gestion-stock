@@ -71,7 +71,7 @@ def stock_modif(request):
 
 def stock_modif_from_body(order):
     livraison = 1 if order["livraison"] else -1
-    list = order["Produits"]
+    list = order["produits"]
     # Dictionnary to create Entry object before rendering
     entry = {}
     entry["idCommande"] = order["idCommande"]
@@ -111,7 +111,7 @@ def stock_modif_from_body(order):
     # Bulk Creating articles, trying out solution to fix problem
     Article.objects.bulk_create(newProduct)
     # Creating Entry item for Logs
-    entry["Produits"] = command
+    entry["produits"] = command
     package = json.dumps(entry, indent=2)
     date = datetime.now()
     Entry.objects.create(

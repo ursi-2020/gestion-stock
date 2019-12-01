@@ -12,8 +12,6 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
-from application.djangoapp import api
-from application.djangoapp import simulate
 from application.djangoapp.models import *
 
 from application.djangoapp.views import stock_modif_from_body, sendAsyncMsg
