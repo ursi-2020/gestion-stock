@@ -14,6 +14,7 @@ from apipkg import api_manager
 
 
 logger = logging.getLogger(__name__)
+logging.getLogger("pika").propagate = False
 
 #Affichage de la page d'accueil
 def index(request):
@@ -218,15 +219,6 @@ def sendAsyncMsg(to, body, functionName):
     message = '{ "from":"' + os.environ[
         'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
        body) + ', "functionname":"' + functionName + '"}'
-    queue.send(to, message)
-
-def sendAsyncMsg(to, body, functionName):
-    time = api_manager.send_request('scheduler', 'clock/time')
-    message = '{ "from":"' + os.environ[
-        'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
-        body) + ', "functionname":"' + functionName + '"}'
-    print(to)
-    print(message)
     queue.send(to, message)
 
 def test_async(request):
