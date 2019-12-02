@@ -37,7 +37,6 @@ python -m application.manage makemigrations
 python -m application.manage migrate
 mkdir -p "${DIR}/static"
 mkdir -p "${DIR}/medias"
-python -m application.manage collectstatic --clear --no-input
 
 if [[ "$#" -gt 0 ]] && [[ "$1" == "loadexampledata" ]]
 then
