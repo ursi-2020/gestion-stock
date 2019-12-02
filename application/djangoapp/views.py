@@ -80,20 +80,27 @@ def schedule_stock_modif(payLoad):
     print("\n========== Schedule stock modif")
     print("payLoad:")
     print(payLoad)
+    print("JSONified:")
+    print(json.dumps(payLoad))
     print("==========\n")
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     time = time + timedelta(days=1)
     time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
-    data = payLoad
-    schedule_task('gestion-stock', '/api/stock_modif', 'none', data , 'stock_modif', time_str)
+    schedule_task('gestion-stock', '/api/stock_modif', 'none', json.dumps(payLoad) , 'stock_modif', time_str)
     return JsonResponse({"Response" : 200})
+
+def dict_to_json(py_dict):
+    tmp = json.loads(json.dumps(py_dict))
+    return tmp
 
 @csrf_exempt
 def stock_modif(request):
     print("\n========== Stock modif")
     print("body:")
     print(request.body)
+    print("loaded:")
+    print(json.loads(request.body))
     print("==========\n")
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
