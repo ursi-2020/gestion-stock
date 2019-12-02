@@ -26,6 +26,7 @@ def api_get_all():
     json = list(stock)
     return {"stock": json}
 
+@csrf_exempt
 def request_stock(request):
     print("\n========== Request_stock")
     allStock = api_get_all()
@@ -87,7 +88,7 @@ def schedule_stock_modif(payLoad):
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     time = time + timedelta(days=1)
     time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
-    schedule_task('gestion-stock', '/api/stock_modif', 'none', json.dumps(payLoad) , 'stock_modif', time_str)
+    schedule_task('gestion-stock', '/api/stock_modif', 'none', json.dumps(payLoad) , 'Stock: Modif', time_str)
     return JsonResponse({"Response" : 200})
 
 def dict_to_json(py_dict):
@@ -266,11 +267,13 @@ def sendAsyncMsg(to, body, functionName):
     print(body)
     print("functionName: ")
     print(functionName)
-    print("============\n")
     time = api.send_request('scheduler', 'clock/time')
     message = '{ "from":"' + os.environ[
         'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
        body) + ', "functionname":"' + functionName + '"}'
+    print("message: ")
+    print(message)
+    print("============\n")
     queue.send(to, message)
 
 def test_async(request):
