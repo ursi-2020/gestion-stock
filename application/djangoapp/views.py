@@ -21,7 +21,7 @@ def view_index(request):
     return render(request, "index.html")
 
 # View giving the list of the registered products with all their info
-def view_list(request):
+def view_products(request):
     context = {
         'produits': Produit.objects.all(),
     }
@@ -29,23 +29,26 @@ def view_list(request):
 
 # View updating the list of the registered products # FIXME Do we need to store this?
 @csrf_exempt
-def view_list_update(request):
+def view_products_update(request):
     ans = fetch_products_list()
     if (ans):
         return HttpResponseRedirect('/list')
     return render(request, '404_Not_Found.html')
 
 # View deleting the list of the registered objects # FIXME Do we need to store this?
-def view_list_delete(request):
+def view_products_delete(request):
     delete_poducts_list()
     return HttpResponseRedirect('/list')
 
 # View showing the stock status
-def view_stock():
-    return
+def view_stock(request):
+    context = {
+        'stock': Article.objects.all(),
+    }
+    return render(request, "stock.html", context)
 
 # View asking for a resupply
-def view_stock_resupply():
+def view_stock_resupply(request):
     return
 
 # ===== FIXME DESTROY EVERYTHING AFTER THIS POINT
@@ -212,10 +215,6 @@ def data(request):
         'produits': Produit.objects.all(),
     }
     return render(request, "data.html", context)
-
-def list_delete(request):
-    Produit.objects.all().delete()
-    return HttpResponseRedirect('/list')
 
 def add_schedule(request):
     print("========== Add schedule")
