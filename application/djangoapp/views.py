@@ -27,26 +27,6 @@ def view_logs(request):
     }
     return render(request, "logs.html", context)
 
-# View giving the list of the registered products with all their info
-def view_products(request):
-    context = {
-        'produits': Produit.objects.all(),
-    }
-    return render(request, "data.html", context)
-
-# View updating the list of the registered products # FIXME Do we need to store this?
-@csrf_exempt
-def view_products_update(request):
-    ans = fetch_products_list()
-    if (ans):
-        return HttpResponseRedirect('/list')
-    return render(request, '404_Not_Found.html')
-
-# View deleting the list of the registered objects # FIXME Do we need to store this?
-def view_products_delete(request):
-    delete_poducts_list()
-    return HttpResponseRedirect('/list')
-
 # View showing the stock status
 def view_stock(request):
     context = {

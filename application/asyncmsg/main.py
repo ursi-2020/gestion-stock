@@ -41,16 +41,6 @@ def dispatch(ch, method, properties, body):
         else:
             print("Le nom de la fonction dans le json n'est pas valide")
 
-    elif fromApp == 'gestion-stock':
-        if functionName == "get_order_stocks":
-            print("\n=========== Get order stocks\n")
-            response = stock_modif_from_body(jsonLoad["body"])
-            sendAsyncMsg("gestion-stock", response, "get_stock_order_response")
-        elif functionName == "get_stock_order_response":
-            print("\n=========== Get order stocks response: " + body + "\n")
-        else:
-            print("Le nom de la fonction dans le json n'est pas valide")
-
     else:
         print("Le nom de l'application du json n'est pas valide")
 
