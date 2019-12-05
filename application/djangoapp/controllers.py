@@ -3,8 +3,8 @@ from apipkg import api_manager as api
 from apipkg import queue_manager as queue
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
-from .models import *
-from .forms import *
+from .utils import *
+from .api import *
 from datetime import datetime, timedelta
 import json
 import requests
@@ -30,6 +30,11 @@ def add_to_stock():
 # Removes a delivery from the stock
 def remove_from_stock():
     return
+
+# Sends an async message to gestion-commerciale to ask for resupply
+def ask_for_resupply():
+    allStock = api_get_all()
+    sendAsyncMsg('gestion-commerciale', allStock, "get_stock")
 
 # Gets all the products from catalogue and stores them
 def fetch_products_list():
@@ -71,5 +76,6 @@ def fetch_products_list():
             logger.info("Product " + product_code + " has been created")
     return True
 
+# Empties the products list
 def delete_poducts_list():
     Produit.objects.all().delete()

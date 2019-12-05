@@ -14,7 +14,9 @@ from apipkg import api_manager
 
 # Called when a http request asks for the stock status
 def api_get_all():
-    return
+    stock = Article.objects.values()
+    json = list(stock)
+    return {"stock": json}
 
 # Called when a http request gives a resupply
 def api_resupply():

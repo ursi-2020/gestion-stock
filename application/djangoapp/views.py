@@ -56,7 +56,11 @@ def view_stock(request):
 
 # View asking for a resupply
 def view_stock_resupply(request):
-    return
+    ask_for_resupply()
+    context = {
+        'stock': Article.objects.all(),
+    }
+    return HttpResponseRedirect('/stock')
 
 # ===== FIXME DESTROY EVERYTHING AFTER THIS POINT
 
@@ -253,23 +257,6 @@ def schedule(request):
 def log(request):
     date = datetime.now().strftime('%Y-%m-%d-%H-%M')
     return list(request)
-
-def sendAsyncMsg(to, body, functionName):
-    print("\n========== Send async msg")
-    print("to: ")
-    print(to)
-    print("body: ")
-    print(body)
-    print("functionName: ")
-    print(functionName)
-    time = api.send_request('scheduler', 'clock/time')
-    message = '{ "from":"' + os.environ[
-        'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
-       body) + ', "functionname":"' + functionName + '"}'
-    print("message: ")
-    print(message)
-    print("============\n")
-    queue.send(to, message)
 
 def test_async(request):
     print("=========== Test async call")
