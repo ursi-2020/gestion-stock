@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .models import *
 from .forms import *
+from .controllers import *
 from datetime import datetime, timedelta
 import json
 import requests
@@ -12,25 +13,32 @@ import logging
 import os
 from apipkg import api_manager
 
-
 logger = logging.getLogger(__name__)
 logging.getLogger("pika").propagate = False
 
 # View of the home page
-def view_index():
-    return
+def view_index(request):
+    return render(request, "index.html")
 
 # View giving the list of the registered products with all their info
-def view_list():
-    return
+def view_list(request):
+    context = {
+        'produits': Produit.objects.all(),
+    }
+    return render(request, "data.html", context)
 
 # View updating the list of the registered products # FIXME Do we need to store this?
-def view_list_update():
-    return
+@csrf_exempt
+def view_list_update(request):
+    ans = fetch_products_list()
+    if (ans):
+        return HttpResponseRedirect('/list')
+    return render(request, '404_Not_Found.html')
 
 # View deleting the list of the registered objects # FIXME Do we need to store this?
-def view_list_delete():
-    return
+def view_list_delete(request):
+    Produit.objects.all().delete()
+    return HttpResponseRedirect('/list')
 
 # View showing the stock status
 def view_stock():
@@ -39,6 +47,8 @@ def view_stock():
 # View asking for a resupply
 def view_stock_resupply():
     return
+
+# ===== FIXME DESTROY EVERYTHING AFTER THIS POINT
 
 #Affichage de la page d'accueil
 def index(request):
@@ -206,45 +216,6 @@ def data(request):
 def list_delete(request):
     Produit.objects.all().delete()
     return HttpResponseRedirect('/list')
-
-@csrf_exempt
-def get_product(request):
-    product = api.send_request('catalogue-produit', 'api/get-all')
-    logger.info(
-        "GET host : catalogue-produit at route /api/get-all")
-    if product == "An invalid response was received from the upstream server\n":
-        return render(request, '404_Not_Found.html')
-    else :
-        catalogue = json.loads(product)
-        list = catalogue['produits']
-        for item in list:
-            codeProduit = item['codeProduit']
-            try:
-                instance = Produit.objects.get(codeProduit=codeProduit)
-            except Produit.DoesNotExist:
-                instance = None
-            if instance is not None:
-                instance.prix = int(item['prix'])/100
-                instance.packaging = item['packaging']
-                instance.familleProduit = item["familleProduit"]
-                instance.descriptionProduit = item["descriptionProduit"]
-                instance.quantiteMin = item["quantiteMin"]
-                instance.exclusivite = item["exclusivite"]
-                instance.save()
-                logger.info("Product " + instance.codeProduit + " a été mis à jour" )
-            else:
-                Produit.objects.create(
-                    codeProduit=codeProduit,
-                    familleProduit=item["familleProduit"],
-                    descriptionProduit=item["descriptionProduit"],
-                    quantiteMin=item["quantiteMin"],
-                    packaging=item["packaging"],
-                    prix=int(item["prix"])/100,
-                    exclusivite=item["exclusivite"]
-                )
-                logger.info("Product " + codeProduit + " a été créé")
-        return HttpResponseRedirect('/list')
-
 
 def add_schedule(request):
     print("========== Add schedule")
