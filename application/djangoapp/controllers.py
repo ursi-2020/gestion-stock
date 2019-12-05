@@ -12,14 +12,18 @@ import logging
 import os
 from apipkg import api_manager
 
+# Returns the stock status
 def get_stock():
     return
 
+# Returns the stock status for a specific product
 def get_product(id):
     return
 
+# Adds a resupply to the stock
 def add_to_stock():
     return
 
+# Removes a delivery from the stock
 def remove_from_stock():
     return

@@ -16,6 +16,30 @@ from apipkg import api_manager
 logger = logging.getLogger(__name__)
 logging.getLogger("pika").propagate = False
 
+# View of the home page
+def view_index():
+    return
+
+# View giving the list of the registered products with all their info
+def view_list():
+    return
+
+# View updating the list of the registered products # FIXME Do we need to store this?
+def view_list_update():
+    return
+
+# View deleting the list of the registered objects # FIXME Do we need to store this?
+def view_list_delete():
+    return
+
+# View showing the stock status
+def view_stock():
+    return
+
+# View asking for a resupply
+def view_stock_resupply():
+    return
+
 #Affichage de la page d'accueil
 def index(request):
     return render(request, "index.html")
