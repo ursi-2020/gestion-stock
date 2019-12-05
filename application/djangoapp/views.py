@@ -37,7 +37,7 @@ def view_list_update(request):
 
 # View deleting the list of the registered objects # FIXME Do we need to store this?
 def view_list_delete(request):
-    Produit.objects.all().delete()
+    delete_poducts_list()
     return HttpResponseRedirect('/list')
 
 # View showing the stock status

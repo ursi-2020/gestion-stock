@@ -70,3 +70,6 @@ def fetch_products_list():
             )
             logger.info("Product " + product_code + " has been created")
     return True
+
+def delete_poducts_list():
+    Produit.objects.all().delete()
