@@ -37,9 +37,6 @@ def view_stock(request):
 # View asking for a resupply
 def view_stock_resupply(request):
     ask_for_resupply()
-    context = {
-        'stock': Article.objects.all(),
-    }
     return HttpResponseRedirect('/stock')
 
 # ===== FIXME DESTROY EVERYTHING AFTER THIS POINT
@@ -49,10 +46,10 @@ def index(request):
     return render(request, "index.html")
 
 ### API
-def api_get_all():
+def api_get_all(request):
     stock = Article.objects.values()
     json = list(stock)
-    return {"stock": json}
+    return HttpResponse(str({"stock": json}))
 
 @csrf_exempt
 def request_stock(request):
