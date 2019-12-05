@@ -20,6 +20,13 @@ logging.getLogger("pika").propagate = False
 def view_index(request):
     return render(request, "index.html")
 
+# View displaying the logs
+def view_logs(request):
+    context = {
+        'entries': Entry.objects.all(),
+    }
+    return render(request, "logs.html", context)
+
 # View giving the list of the registered products with all their info
 def view_products(request):
     context = {
@@ -95,12 +102,6 @@ def stock(request):
         'stock': Article.objects.all(),
     }
     return render(request, "stock.html", context)
-
-def entry(request):
-    context = {
-        'entries': Entry.objects.all(),
-    }
-    return render(request, "entries.html", context)
 
 @csrf_exempt
 def schedule_add_stock(request):
