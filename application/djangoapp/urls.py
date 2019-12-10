@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views, api
 app_name = 'gestion-stock'
 urlpatterns = [
     path('', views.view_index, name='index'),
@@ -9,9 +9,9 @@ urlpatterns = [
     path('stock/resupply/', views.view_stock_resupply, name='stock/resupply'),
 
     ## API ROUTES ##
-    path('api/get-all', views.api_get_all, name='api-get-all'),
-    path('api/resupply', views.api_resupply, name='api-resupply'),
-    path('api/delivery', views.api_delivery, name='api-delivery'),
-    path('api/resupply-immediate', views.api_resupply_immediate, name='api-resupply-immediate'),
-    path('api/delivery-immediate', views.api_delivery_immediate, name='api-delivery-immediate'),
+    path('api/get-all', api.api_get_all, name='api-get-all'),
+    path('api/resupply', api.api_resupply, name='api-resupply'),
+    path('api/delivery', api.api_delivery, name='api-delivery'),
+    path('api/resupply-immediate', api.api_resupply_immediate, name='api-resupply-immediate'),
+    path('api/delivery-immediate', api.api_delivery_immediate, name='api-delivery-immediate'),
 ]

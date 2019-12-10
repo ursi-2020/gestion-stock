@@ -4,7 +4,6 @@ from apipkg import queue_manager as queue
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from .utils import *
-from .api import *
 from datetime import datetime, timedelta
 import json
 import requests
@@ -17,7 +16,9 @@ logging.getLogger("pika").propagate = False
 
 # Returns the stock status
 def get_stock():
-    return
+    stock = Article.objects.values()
+    ret = list(stock)
+    return ret
 
 # Returns the stock status for a specific product
 def get_product(id):
@@ -33,5 +34,5 @@ def remove_from_stock():
 
 # Sends an async message to gestion-commerciale to ask for resupply
 def ask_for_resupply():
-    allStock = api_get_all()
+    allStock = {"stock": get_stock()}
     sendAsyncMsg('gestion-commerciale', allStock, "get_stock")

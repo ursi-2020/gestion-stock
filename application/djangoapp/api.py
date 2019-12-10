@@ -13,25 +13,30 @@ import os
 from apipkg import api_manager
 
 # Called when a http request asks for the stock status
-def api_get_all():
-    stock = Article.objects.values()
-    json = list(stock)
-    return {"stock": json}
+@csrf_exempt
+def api_get_all(request):
+    json = get_stock()
+    return HttpResponse(str({"stock": json}))
 
 # Called when a http request gives a resupply
-def api_resupply():
+@csrf_exempt
+def api_resupply(request):
     ask_for_resupply()
+    return JsonResponse({"Response": 200})
 
 # Called when a http request asks for a delivery
-def api_delivery():
-    return
+@csrf_exempt
+def api_delivery(request):
+    return JsonResponse({"Response": 200})
 
 # ===== SCHEDULED
 
 # Called when a scheduled http request gives a resupply
-def api_resupply_immediate():
-    return
+@csrf_exempt
+def api_resupply_immediate(request):
+    return JsonResponse({"Response": 200})
 
 # Called when a scheduled http request asks for a delivery
-def api_delivery_immediate():
-    return
+@csrf_exempt
+def api_delivery_immediate(request):
+    return JsonResponse({"Response": 200})
