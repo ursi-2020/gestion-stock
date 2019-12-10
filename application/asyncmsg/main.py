@@ -42,6 +42,10 @@ def dispatch(ch, method, properties, body):
     if fromApp == 'gestion-commerciale':
         if functionName == "get_order_stocks":
             async_resupply(jsonLoad["body"])
+        elif functionName == "resupply":
+            async_resupply(jsonLoad["body"])
+        elif functionName == "delivery":
+            async_delivery(jsonLoad["body"])
         else:
             print("Le nom de la fonction dans le json n'est pas valide")
 

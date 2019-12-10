@@ -31,12 +31,22 @@ def api_delivery(request):
 
 # ===== SCHEDULED
 
+# FIXME Update how resupplies and deliveries work
+
 # Called when a scheduled http request gives a resupply
 @csrf_exempt
 def api_resupply_immediate(request):
-    return JsonResponse({"Response": 200})
+    # TODO : check what we're getting from request.body
+    order = json.loads(request.body)
+    response = stock_modif_from_body(order)
+    sendAsyncMsg("gestion-commerciale", response, "get_stock_order_response")
+    return JsonResponse({"Response": response})
 
 # Called when a scheduled http request asks for a delivery
 @csrf_exempt
 def api_delivery_immediate(request):
-    return JsonResponse({"Response": 200})
+    # TODO : check what we're getting from request.body
+    order = json.loads(request.body)
+    response = stock_modif_from_body(order)
+    sendAsyncMsg("gestion-commerciale", response, "get_stock_order_response")
+    return JsonResponse({"Response": response})

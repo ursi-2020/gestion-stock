@@ -26,4 +26,9 @@ def async_resupply(payLoad):
 
 # Called when an async message asks for a delivery
 def async_delivery():
-    return
+    clock_time = api.send_request('scheduler', 'clock/time')
+    time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
+    time = time + timedelta(days=1)
+    time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
+    schedule_task('gestion-stock', '/api/delivery-immediate', 'none', json.dumps(payLoad) , 'Stock: Delivery immediate', time_str)
+    return JsonResponse({"Response" : 200})
