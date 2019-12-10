@@ -10,8 +10,8 @@ urlpatterns = [
 
     ## API ROUTES ##
     path('api/get-all', views.api_get_all, name='api-get-all'),
-    path('api/resupply', views.api_get_all, name='api-get-all'),
-    path('api/delivery', views.api_get_all, name='api-get-all'),
-    path('api/add-to-stock-immediate', views.schedule_add_stock, name='add-to-stock'),
-    path('api/remove-from-stock-immediate', views.stock_modif, name='get-from-stock'),
+    path('api/resupply', views.api_resupply, name='api-resupply'),
+    path('api/delivery', views.api_delivery, name='api-delivery'),
+    path('api/resupply-immediate', views.api_resupply_immediate, name='api-resupply-immediate'),
+    path('api/delivery-immediate', views.api_delivery_immediate, name='api-delivery-immediate'),
 ]

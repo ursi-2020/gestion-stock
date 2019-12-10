@@ -18,18 +18,37 @@ logging.getLogger("pika").propagate = False
 
 # Sends an async message
 def sendAsyncMsg(to, body, functionName):
-    print("\n========== Send async msg")
-    print("to: ")
-    print(to)
-    print("body: ")
-    print(body)
-    print("functionName: ")
-    print(functionName)
     time = api.send_request('scheduler', 'clock/time')
     message = '{ "from":"' + os.environ[
         'DJANGO_APP_NAME'] + '", "to": "' + to + '", "datetime": ' + time + ', "body": ' + json.dumps(
        body) + ', "functionname":"' + functionName + '"}'
-    print("message: ")
-    print(message)
-    print("============\n")
+
+    print_info("Send async msg", [
+        ("to", to),
+        ("body", body),
+        ("functionName", functionName),
+        ("message", message),
+    ])
     queue.send(to, message)
+
+def schedule_task(host, url, recurrence, data, name, time):
+    headers = {'Host': 'scheduler'}
+    body = {"target_url": url, "target_app": host, "time": time, "recurrence": recurrence, "data": data, "source_app": "gestion-stock", "name": name}
+    response = requests.post(api.api_services_url + 'schedule/add', headers = headers, json = body)
+    print_info("Schedule task", [
+        ("host", host),
+        ("url", url),
+        ("recurrence", recurrence),
+        ("data", data),
+        ("name", name),
+        ("time", time),
+        ("body", body),
+        ("response", response)
+    ])
+
+def print_info(title, couple_list):
+    print("\n===== " + title)
+    for cl in couple_list:
+        print("=== " + cl[0] + ":")
+        print(cl[1])
+    print("=====\n")

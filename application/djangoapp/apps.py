@@ -25,4 +25,4 @@ class ApplicationConfig(AppConfig):
             time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
             time = time + timedelta(hours=1)
             time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
-            schedule_task('gestion-stock', 'api/request_stock', 'day', '', 'Stock: Daily reappro', time_str)
+            #schedule_task('gestion-stock', 'api/request_stock', 'day', '', 'Stock: Daily reappro', time_str) FIXME Put this back

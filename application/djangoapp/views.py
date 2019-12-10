@@ -53,11 +53,6 @@ def api_get_all(request):
 
 @csrf_exempt
 def request_stock(request):
-    print("\n========== Request_stock")
-    allStock = api_get_all()
-    print("allStock:")
-    print(allStock)
-    print("==========\n")
     sendAsyncMsg('gestion-commerciale', allStock, "get_stock")
     context = {
         'stock': Article.objects.all(),
@@ -86,7 +81,6 @@ def stock(request):
 
 @csrf_exempt
 def schedule_add_stock(request):
-    print("========== Schedule add stock")
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     time = time + timedelta(days=1)
@@ -97,12 +91,6 @@ def schedule_add_stock(request):
 
 @csrf_exempt
 def schedule_stock_modif(payLoad):
-    print("\n========== Schedule stock modif")
-    print("payLoad:")
-    print(payLoad)
-    print("JSONified:")
-    print(json.dumps(payLoad))
-    print("==========\n")
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
     time = time + timedelta(days=1)
@@ -116,12 +104,6 @@ def dict_to_json(py_dict):
 
 @csrf_exempt
 def stock_modif(request):
-    print("\n========== Stock modif")
-    print("body:")
-    print(request.body)
-    print("loaded:")
-    print(json.loads(request.body))
-    print("==========\n")
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
     response = stock_modif_from_body(order)
