@@ -2,14 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from apipkg import api_manager as api
 
 myappurl = "http://localhost:" + os.environ["WEBSERVER_PORT"]
 
 
 def main():
-    api.unregister(os.environ['DJANGO_APP_NAME'])
-    api.register(myappurl, os.environ['DJANGO_APP_NAME'])
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
     try:
         from django.core.management import execute_from_command_line
