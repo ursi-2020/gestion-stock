@@ -14,7 +14,6 @@ django.setup()
 
 from application.djangoapp.async import *
 
-from application.djangoapp.views import stock_modif_from_body, sendAsyncMsg, schedule_stock_modif
 from application.djangoapp.utils import print_info
 
 
