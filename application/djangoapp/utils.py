@@ -46,7 +46,10 @@ def schedule_task(host, url, recurrence, data, name, time):
         ("response", response)
     ])
 
-def print_info(title, couple_list):
+def print_info(title, couple_list, should_print=False):
+    if not should_print:
+        return
+
     print("\n===== " + title)
     for cl in couple_list:
         print("=== " + cl[0] + ":")

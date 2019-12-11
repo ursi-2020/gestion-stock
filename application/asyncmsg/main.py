@@ -20,8 +20,9 @@ from application.djangoapp.utils import print_info
 def main():
     #FIXME add task to scheduler
     #request = api.send_request('scheduler', 'schedule/add')
-    print("Start")
+    #print("===== Start")
     #queue.receive('AppB', callback)
+    return
 
 def dispatch(ch, method, properties, body):
     jsonLoad = json.loads(body)
