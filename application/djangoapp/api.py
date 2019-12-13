@@ -40,6 +40,7 @@ def api_resupply_immediate(request):
     order = json.loads(request.body)
     response = stock_modif_from_body(order)
     sendAsyncMsg("gestion-commerciale", response, "get_stock_order_response")
+    sendAsyncMsg("business-intelligence", response, "get_resupply")
     return JsonResponse({"Response": response})
 
 # Called when a scheduled http request asks for a delivery
@@ -49,4 +50,5 @@ def api_delivery_immediate(request):
     order = json.loads(request.body)
     response = stock_modif_from_body(order)
     sendAsyncMsg("gestion-commerciale", response, "get_stock_order_response")
+    sendAsyncMsg("business-intelligence", response, "get_delivery")
     return JsonResponse({"Response": response})

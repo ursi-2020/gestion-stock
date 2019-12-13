@@ -14,7 +14,7 @@ from apipkg import api_manager
 # Called when an async message asks for the stock status (called by business-intelligence)
 def async_get_stock():
     json = get_stock()
-    sendAsyncMsg("business-intelligence", str({"stock": json}), "get_delivery")
+    sendAsyncMsg("business-intelligence", str({"stock": json}), "get_stock")
     return JsonResponse({"Response" : 200})
 
 # Called when an async message gives a resupply (called by gestion-commerciale)
