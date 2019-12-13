@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views, api
+from . import views, api, test_functions
 app_name = 'gestion-stock'
 urlpatterns = [
     path('', views.view_index, name='index'),
@@ -14,4 +14,7 @@ urlpatterns = [
     path('api/delivery', api.api_delivery, name='api-delivery'),
     path('api/resupply-immediate', api.api_resupply_immediate, name='api-resupply-immediate'),
     path('api/delivery-immediate', api.api_delivery_immediate, name='api-delivery-immediate'),
+
+    ## TESTS ##
+    path('test/async_get', test_functions.test_api_get_stock, name='test-api-get-stock')
 ]

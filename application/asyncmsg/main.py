@@ -49,6 +49,19 @@ def dispatch(ch, method, properties, body):
         else:
             print("Le nom de la fonction dans le json n'est pas valide")
 
+    if fromApp == 'business-intelligence':
+        if functionName == "get_stock":
+            async_get_stock()
+        else:
+            print("Le nom de la fonction dans le json n'est pas valide")
+
+    # For testing purpose only
+    if fromApp == 'gestion-stock':
+        if functionName == "get_stock":
+            async_get_stock()
+        else:
+            print("Le nom de la fonction dans le json n'est pas valide")
+
     else:
         print("Le nom de l'application du json n'est pas valide")
 
