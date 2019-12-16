@@ -2,6 +2,8 @@
 
 [API](api.md)
 
+[Asynchronous API](async_api.md)
+
 # Use Case
 
 ![use_case](img/use-case-sprint2.png)
