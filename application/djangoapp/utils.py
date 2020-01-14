@@ -46,7 +46,7 @@ def schedule_task(host, url, recurrence, data, name, time):
         ("response", response)
     ])
 
-def print_info(title, couple_list, should_print=True):
+def print_info(title, couple_list, should_print=False):
     if not should_print:
         return
 
