@@ -21,7 +21,7 @@ def async_get_stock():
 def async_resupply(payLoad):
     clock_time = api.send_request('scheduler', 'clock/time')
     time = datetime.strptime(clock_time, '"%d/%m/%Y-%H:%M:%S"')
-    time = time + timedelta(days=1)
+    time = time + timedelta(minutes=1)
     time_str = time.strftime('%d/%m/%Y-%H:%M:%S')
     schedule_task('gestion-stock', '/api/resupply-immediate', 'none', json.dumps(payLoad) , 'Stock: Resupply immediate', time_str)
     return JsonResponse({"Response" : 200})
