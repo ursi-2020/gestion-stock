@@ -20,7 +20,6 @@ from application.djangoapp.utils import print_info
 def main():
     #FIXME add task to scheduler
     #request = api.send_request('scheduler', 'schedule/add')
-    #print("===== Start")
     #queue.receive('AppB', callback)
     return
 
@@ -46,21 +45,21 @@ def dispatch(ch, method, properties, body):
             async_resupply(jsonLoad["body"])
         elif functionName == "delivery":
             async_delivery(jsonLoad["body"])
-        else:
-            print("Le nom de la fonction dans le json n'est pas valide")
+        #else:
+        #    print("Le nom de la fonction dans le json n'est pas valide")
 
     elif fromApp == 'business-intelligence':
         if functionName == "get_stock":
             async_get_stock()
-        else:
-            print("Le nom de la fonction dans le json n'est pas valide")
+        #else:
+        #    print("Le nom de la fonction dans le json n'est pas valide")
 
     # For testing purpose only
     elif fromApp == 'gestion-stock':
         if functionName == "get_stock":
             async_get_stock()
-        else:
-            print("Le nom de la fonction dans le json n'est pas valide")
+        #else:
+        #    print("Le nom de la fonction dans le json n'est pas valide")
 
     else:
         print("Le nom de l'application du json n'est pas valide")
