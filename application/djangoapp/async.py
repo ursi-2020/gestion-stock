@@ -4,6 +4,9 @@ from .utils import *
 from datetime import datetime, timedelta
 import json
 
+import logging
+logging.getLogger("requests").setLevel(logging.ERROR)
+
 # Called when an async message asks for the stock status (called by business-intelligence)
 def async_get_stock():
     json = get_stock()
