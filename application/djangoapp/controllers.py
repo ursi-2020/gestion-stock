@@ -3,6 +3,7 @@ from .utils import *
 from datetime import datetime
 import json
 import logging
+from models import Article
 
 logger = logging.getLogger(__name__)
 logging.getLogger("pika").propagate = False
