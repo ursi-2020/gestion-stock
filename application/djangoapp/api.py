@@ -39,7 +39,6 @@ def api_resupply_immediate(request):
     # TODO : check what we're getting from request.body
     order = json.loads(request.body)
     response = stock_modif_from_body(order)
-    sendAsyncMsg("gestion-commerciale", response, "get_stock_order_response")
     sendAsyncMsg("business-intelligence", response, "get_resupply")
     return JsonResponse({"Response": response})
 
