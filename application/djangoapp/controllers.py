@@ -1,15 +1,8 @@
 from django.http import *
-from apipkg import api_manager as api
-from apipkg import queue_manager as queue
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
 from .utils import *
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
-import requests
 import logging
-import os
-from apipkg import api_manager
 
 logger = logging.getLogger(__name__)
 logging.getLogger("pika").propagate = False

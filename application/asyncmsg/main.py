@@ -1,14 +1,9 @@
 import sys
 import os
-import json
-from django.shortcuts import redirect
-from apipkg import api_manager
 
 import logging
 logging.getLogger("requests").setLevel(logging.ERROR)
 
-
-from apipkg import queue_manager as queue
 sys.dont_write_bytecode = True
 
 import django
